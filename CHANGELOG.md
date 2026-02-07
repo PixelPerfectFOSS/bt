@@ -1,5 +1,5 @@
-BT 1.0.0 beta2 - TBD
---------------------
+BT 1.0.0 beta2 - 7 Feb, 2026
+----------------------------
 - **Initializer**
   - Generate `.data/builder.config.json` based on repository data
 
