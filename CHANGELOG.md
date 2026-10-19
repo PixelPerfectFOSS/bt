@@ -1,3 +1,7 @@
+BT 1.0.0 - 19 Oct, 2026
+-----------------------
+No major changes since beta releases.
+
 BT 1.0.0 beta3 - 19 Oct, 2026
 -----------------------------
 - Upgrade to Node.js 20.18.0
