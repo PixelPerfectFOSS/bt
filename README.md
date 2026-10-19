@@ -68,6 +68,16 @@ Example:
 
 You can add your own platform specifications to `specs` directory and use them.
 
+## Troubleshooting
+
+If PowerShell prevents you from running BT (`bt.ps1` fails with a security error), you need to open PowerShell with administrator privileges and enter:
+
+```
+Set-ExecutionPolicy RemoteSigned
+```
+
+When prompted, answer "Yes" (Y).
+
 ## Templates
 `bt init` will create a project using a default template that uses [GSAP](https://greensock.com/) animation library. Additionally [Anime.js](https://animejs.com/)-based template is available for fully self-hosted banners with as small size overhead as possible:
 
