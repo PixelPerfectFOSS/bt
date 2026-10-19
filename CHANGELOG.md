@@ -1,3 +1,8 @@
+BT 1.0.0 beta3 - 19 Oct, 2026
+-----------------------------
+- Upgrade to Node.js 20.18.0
+- Add help output whem running `bt` without a command
+
 BT 1.0.0 beta2 - 7 Feb, 2026
 ----------------------------
 - **Initializer**
