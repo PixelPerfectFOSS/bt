@@ -83,7 +83,7 @@ Development server runs at `http://localhost:8000/` and serves project's `HTML` 
 * `http://localhost:8000/build` - serves `build` directory with latest publish-ready banner build, if it exists.
 
 ## Copyright and License
-* Banner Toolchain. Copyright (c) 2020-2022 Timur Gafarov. Distributed under the MIT license.
+* Banner Toolchain. Copyright (c) 2020-2026 Timur Gafarov. Distributed under the MIT license.
 * [cwebp](https://github.com/webmproject/libwebp/blob/main/examples/cwebp.c). Copyright (c) 2011 Google Inc. Distributed under the BSD 3-Clause License.
 * [Efficient Compression Tool (ECT)](https://github.com/fhanau/Efficient-Compression-Tool). Copyright (c) Felix Hanau. Distributed under the Apache License.
 * [Highlight.js](https://highlightjs.org/). Copyright (c) 2006 Ivan Sagalaev. Distributed under the BSD 3-Clause License.
