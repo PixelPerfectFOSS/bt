@@ -28,6 +28,8 @@ Waring: this is NOT an end user web app! It is meant to be run locally for devel
 [![Screenshot2](https://github.com/gecko0307/bt/raw/master/assets/image-optimizer.png)](https://github.com/gecko0307/bt/raw/master/assets/image-optimizer.png)
 
 ## Installation
+Requires Node.js 20.18.0 or newer.
+
 ```
 npm install
 npm link

@@ -222,51 +222,72 @@ async function capture(options) {
     await capturer(options);
 }
 
+function printUsage() {
+    console.log(`Banner Toolchain
+
+Usage:
+  bt init [template]
+  bt run
+  bt capture [video] <resolution>
+  bt build [platform] [version]
+  bt deploy [branch]
+
+Run "bt init" to create a project from the default template.`);
+}
+
 async function main() {
-    if (args.length > 0) {
-        if (args[0] === "init") {
-            await init({
-                template: args[1] || "default"
-            });
-            process.exit();
-        }
-        else if (args[0] === "run") {
-            await run({});
-        }
-        else if (args[0] === "capture") {
-            let width = 0;
-            let height = 0;
-            let video = args.includes("video");
-            const resolution = /([0-9]+)x([0-9]+)/;
-            for (arg of args) {
-                const m = arg.match(resolution);
-                if (m) {
-                    width = parseInt(m[1]);
-                    height = parseInt(m[2]);
-                    break;
-                }
+    if (args.length === 0 || args[0] === "help" || args[0] === "--help" || args[0] === "-h") {
+        printUsage();
+        return;
+    }
+
+    if (args[0] === "init") {
+        await init({
+            template: args[1] || "default"
+        });
+        process.exit();
+    }
+    else if (args[0] === "run") {
+        await run({});
+    }
+    else if (args[0] === "capture") {
+        let width = 0;
+        let height = 0;
+        let video = args.includes("video");
+        const resolution = /([0-9]+)x([0-9]+)/;
+        for (const arg of args) {
+            const m = arg.match(resolution);
+            if (m) {
+                width = parseInt(m[1]);
+                height = parseInt(m[2]);
+                break;
             }
-            await capture({
-                video: video,
-                width: width,
-                height: height
-            });
-            process.exit();
         }
-        else if (args[0] === "build") {
-            await build({
-                platform: args[1] || "publish", 
-                version: args[2],
-                root: "./"
-            });
-            process.exit();
-        }
-        else if (args[0] === "deploy") {
-            await deploy({
-                branch: args[1] || ""
-            });
-            process.exit();
-        }
+        await capture({
+            video: video,
+            width: width,
+            height: height
+        });
+        process.exit();
+    }
+    else if (args[0] === "build") {
+        await build({
+            platform: args[1] || "publish",
+            version: args[2],
+            root: "./"
+        });
+        process.exit();
+    }
+    else if (args[0] === "deploy") {
+        await deploy({
+            branch: args[1] || ""
+        });
+        process.exit();
+    }
+    else {
+        console.error(`Unknown command: ${args[0]}`);
+        printUsage();
+        process.exitCode = 1;
     }
 }
 
@@ -275,5 +296,8 @@ async function main() {
         await main();
     }
     catch(e) {
+        console.error("Banner Toolchain command failed:");
+        console.error(e && e.stack ? e.stack : e);
+        process.exitCode = 1;
     }
 })();

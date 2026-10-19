@@ -5,6 +5,9 @@
     "author": "Timur Gafarov",
     "private": false,
     "license": "MIT",
+    "engines": {
+        "node": ">=20.18.0"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/gecko0307/bt.git"
@@ -26,7 +29,7 @@
         "autoprefixer": "^9.8.8",
         "babel-plugin-remove-code": "0.0.6",
         "base64-stream": "^1.0.0",
-        "canvas": "^2.9.1",
+        "canvas": "^2.11.2",
         "chalk": "^4.1.2",
         "cheerio": "^1.0.0-rc.10",
         "chokidar": "^3.5.3",
