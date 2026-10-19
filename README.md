@@ -5,6 +5,8 @@ The main reason I created this was to replace an in-house tool with my own so th
 
 Waring: this is NOT an end user web app! It is meant to be run locally for development purposes only, not on a real server.
 
+Warning: BT 1.0.0 is an old tool that uses obsolete versions of dependencies. Upgrade will be done in 2.0.0.
+
 ## Features
 * ✔️ Project initialization, custom templates
 * ✔️ JavaScript module bundling and babeling
