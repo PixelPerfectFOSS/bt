@@ -48,7 +48,7 @@ private Color nearestColor(Color source, const(Color)[] colors)
     return result;
 }
 
-void applyAtkinson(
+void ditheringAtkinson(
     ubyte[] rgba,
     uint width,
     uint height,

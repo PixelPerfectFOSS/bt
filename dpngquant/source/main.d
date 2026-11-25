@@ -8,7 +8,7 @@ import bindbc.freeimage;
 
 import wuquant;
 import palette: sortPalette;
-import atkinson: applyAtkinson;
+import atkinson: ditheringAtkinson;
 
 import std.string: toStringz;
 
@@ -195,7 +195,7 @@ void main(string[] args)
     paletteImage.saveImage("palette.png");
 
     writeln("Applying Atkinson dithering...");
-    applyAtkinson(rgba, width, height, colors);
+    ditheringAtkinson(rgba, width, height, colors);
     
     if (!saveIndexedPNG(outputFilename, width, height, rgba, colors))
     {
