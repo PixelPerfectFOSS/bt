@@ -1,3 +1,8 @@
+BT 1.1.0 - TBD
+--------------
+- **Image Optimizer**
+  - Reworked PNG quantizer. It is now implemented as a native utility DPNGQuant written in D. This fixes out of memory crashes, because image-q + PngQuant are no longer used.
+
 BT 1.0.0 - 19 Oct, 2026
 -----------------------
 No major changes since beta releases.
