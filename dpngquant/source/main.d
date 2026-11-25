@@ -20,18 +20,14 @@ bool saveIndexedPNG(
     const(Color)[] colors
 )
 {
-    auto dib = FreeImage_Allocate(
-        cast(int)width,
-        cast(int)height,
-        8,
-        0, 0, 0
-    );
-
+    auto dib = FreeImage_Allocate(cast(int)width, cast(int)height, 8, 0, 0, 0);
     if (dib is null)
         return false;
-
-    scope(exit) FreeImage_Unload(dib);
-
+    scope(exit)
+    {
+        FreeImage_Unload(dib);
+    }
+    
     // Build RGB palette and transparency table.
     auto palette = FreeImage_GetPalette(dib);
     ubyte[] alpha = new ubyte[colors.length];
@@ -43,7 +39,6 @@ bool saveIndexedPNG(
         palette[i].rgbGreen = c.g;
         palette[i].rgbBlue = c.b;
         palette[i].rgbReserved = 0;
-
         alpha[i] = c.a;
         if (c.a != 255)
             hasAlpha = true;
@@ -51,11 +46,7 @@ bool saveIndexedPNG(
 
     if (hasAlpha)
     {
-        FreeImage_SetTransparencyTable(
-            dib,
-            alpha.ptr,
-            cast(int)alpha.length
-        );
+        FreeImage_SetTransparencyTable(dib, alpha.ptr, cast(int)alpha.length);
         FreeImage_SetTransparent(dib, TRUE);
     }
 
@@ -69,37 +60,26 @@ bool saveIndexedPNG(
             (cast(uint)c.g << 8) |
             (cast(uint)c.b << 16) |
             (cast(uint)c.a << 24);
-
         indexMap[key] = cast(uint)i;
     }
 
     // FreeImage scanlines are bottom-up.
-    foreach (y; 0 .. height)
+    foreach (y; 0..height)
     {
-        auto scan = FreeImage_GetScanLine(
-            dib,
-            cast(int)(height - 1 - y)
-        );
-
-        foreach (x; 0 .. width)
+        auto scan = FreeImage_GetScanLine(dib, cast(int)(height - 1 - y));
+        foreach (x; 0..width)
         {
             size_t p = (cast(size_t)y * width + x) * 4;
-
             uint key =
                 cast(uint)rgba[p] |
                 (cast(uint)rgba[p + 1] << 8) |
                 (cast(uint)rgba[p + 2] << 16) |
                 (cast(uint)rgba[p + 3] << 24);
-
             scan[x] = cast(ubyte)indexMap[key];
         }
     }
 
-    return FreeImage_Save(
-        FIF_PNG,
-        dib,
-        filename.toStringz
-    ) != 0;
+    return FreeImage_Save(FIF_PNG, dib, filename.toStringz) != 0;
 }
 
 void main(string[] args)
@@ -116,7 +96,7 @@ void main(string[] args)
         : "output.png";
     uint numColors = args.length >= 4
         ? args[3].to!uint
-        : 230;
+        : 256;
     if (numColors > 256)
         numColors = 256;
 
@@ -155,12 +135,11 @@ void main(string[] args)
 
     ubyte[] rgba = new ubyte[pixelCount * 4];
 
-    foreach (y; 0 .. height)
-    foreach (x; 0 .. width)
+    foreach (y; 0..height)
+    foreach (x; 0..width)
     {
         auto c = img[cast(int)x, cast(int)y];
         size_t i = (cast(size_t)y * width + x) * 4;
-
         rgba[i]     = cast(ubyte)(c.r * 255.0f + 0.5f);
         rgba[i + 1] = cast(ubyte)(c.g * 255.0f + 0.5f);
         rgba[i + 2] = cast(ubyte)(c.b * 255.0f + 0.5f);
