@@ -2,7 +2,6 @@ import alias from "@rollup/plugin-alias";
 import svelte from "rollup-plugin-svelte";
 import css from "rollup-plugin-css-only";
 import resolve from "@rollup/plugin-node-resolve";
-//import commonjs from "@rollup/plugin-commonjs";
 import { terser } from "rollup-plugin-terser";
 
 process.chdir(__dirname);
@@ -35,7 +34,6 @@ export default {
 			browser: true,
 			dedupe: ["svelte"]
 		}),
-		//commonjs(),
 		production && terser()
 	]
 };

@@ -1,9 +1,9 @@
 const os = require("os");
 const fs = require("fs-extra");
 const path = require("path");
-const decodePNG = require("./png-decoder");
-const imageq = require("image-q");
-const PngQuant = require("pngquant");
+//const decodePNG = require("./png-decoder");
+//const imageq = require("image-q");
+//const PngQuant = require("pngquant");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 const execFile = util.promisify(require("child_process").execFile);
@@ -16,46 +16,65 @@ async function compress(inputStream, options) {
 	const compressOpts = options.options.compress;
 	let outStream = inputStream;
 	
-	if (!compressOpts.lossless) {
-		const colors = Math.floor(options.quality / 100 * 256);
-		const pngQuanter = new PngQuant([colors, "--strip"]);
+	const isWindows = process.platform === "win32";
+	const isLinux = process.platform === "linux";
+	
+	if (!(await fs.pathExists(tempFolderPath))) {
+		await fs.mkdir(tempFolderPath, { recursive: true });
+	}
+	
+	// Use DPNGQuant for lossy compression under Windows
+	if (isWindows) {
+		if (!compressOpts.lossless) {
+			const colors = Math.floor(options.quality / 100 * 256);
+			
+			/*
+			const pngQuanter = new PngQuant([colors, "--strip"]);
 
-		// Decode PNG from stream
-		const png = await decodePNG(inputStream);
+			// Decode PNG from stream
+			const png = await decodePNG(inputStream);
 
-		// Create image-q image
-		const inPointContainer = imageq.utils.PointContainer.fromUint8Array(
-			png.data, png.width, png.height
-		);
+			// Create image-q image
+			const inPointContainer = imageq.utils.PointContainer.fromUint8Array(
+				png.data, png.width, png.height
+			);
 
-		// Create image-q palette
-		const palette = await imageq.buildPalette([inPointContainer], {
-			colorDistanceFormula: "manhattan",
-			paletteQuantization: compressOpts.paletteDithering || "wuquant",
-			colors: colors
-		});
+			// Create image-q palette
+			const palette = await imageq.buildPalette([inPointContainer], {
+				colorDistanceFormula: "manhattan",
+				paletteQuantization: compressOpts.paletteDithering || "wuquant",
+				colors: colors
+			});
 
-		// Dithering
-		const outPointContainer = await imageq.applyPalette(inPointContainer, palette, {
-			colorDistanceFormula: "manhattan",
-			imageQuantization: compressOpts.imageDithering || "atkinson"
-		});
+			// Dithering
+			const outPointContainer = await imageq.applyPalette(inPointContainer, palette, {
+				colorDistanceFormula: "manhattan",
+				imageQuantization: compressOpts.imageDithering || "atkinson"
+			});
 
-		// Write data back to PNG image and create output stream
-		png.data = outPointContainer.toUint8Array();
-		outStream = png.pack().pipe(pngQuanter);
+			// Write data back to PNG image and create output stream
+			png.data = outPointContainer.toUint8Array();
+			outStream = png.pack().pipe(pngQuanter);
+			*/
+			
+			// Save to a temporary file
+			const tempInFilename = path.join(tempFolderPath, nanoid() + ".png");
+			await streamToFile(outStream, tempInFilename);
+			
+			const tempOutFilename = path.join(tempFolderPath, nanoid() + ".png");
+			const dpngquantPath = path.join(__dirname, "..", "..", "..", "bin", "dpngquant.exe");
+			await execFile(dpngquantPath, [tempInFilename, tempOutFilename]);
+			outStream = fs.createReadStream(tempOutFilename);
+		}
+	}
+	else {
+		console.log("Sorry, PNG lossy compression is not available on this platform");
 	}
 
 	// Use ECT for lossless compression under Windows & Linux
-	const isWindows = process.platform === "win32";
-	const isLinux = process.platform === "linux";
 	if (isWindows || isLinux) {
 		const ectPath = path.join(__dirname, "..", "..", "..", "bin", isWindows? "ect.exe" : "ect");
-		const filename = nanoid() + ".png";
-		if (!(await fs.pathExists(tempFolderPath))) {
-			await fs.mkdir(tempFolderPath, { recursive: true });
-		}
-		const tempFilename = path.join(tempFolderPath, filename);
+		const tempFilename = path.join(tempFolderPath, nanoid() + ".png");
 		await streamToFile(outStream, tempFilename);
 		await execFile(ectPath, ["-9", "-strip", "--mt-deflate", tempFilename]);
 		outStream = fs.createReadStream(tempFilename);

@@ -7,7 +7,6 @@
 
     $: imagePath = "Images/" + filename;
 
-    //$: outputFormat = data.options.outputFormat;
     $: inputFormat = filename.substring(filename.lastIndexOf(".") + 1);
     $: canConvertToPNG = inputFormat === "png" || inputFormat === "svg";
     $: canConvertToJPEG = inputFormat === "png" || inputFormat === "jpg" || inputFormat === "svg";
@@ -33,6 +32,10 @@
 
     onMount(async () => {
     });
+    
+    let pngDisabled = false;
+    if (data.options.outputFormat === "png")
+        pngDisabled = true;
 </script>
 
 <main>
@@ -64,10 +67,10 @@
         {#if !data.options.compress.lossless && !(inputFormat === "svg" && data.options.outputFormat === "svg")}
             <div class="widget anyFormat">
                 <p>{qualityText}</p>
-                <input type="range" min="1" max="100" step="1" bind:value={data.quality}>
+                <input type="range" min="1" max="100" step="1" bind:value={data.quality} disabled={pngDisabled}>
             </div>
             <div class="widget anyFormat" style="padding-top: 14px">
-                <input type="number" min="1" max="100" step="1" bind:value={data.quality}>
+                <input type="number" min="1" max="100" step="1" bind:value={data.quality} disabled={pngDisabled}>
             </div>
         {/if}
 
@@ -100,7 +103,7 @@
         {#if (data.options.outputFormat === "png" && !data.options.compress.lossless) || (inputFormat === "png" && data.options.outputFormat === "svg")}
             <div class="widget anyFormat">
                 <p>Dithering</p>
-                <select bind:value={data.options.compress.imageDithering}>
+                <select bind:value={data.options.compress.imageDithering} disabled={pngDisabled}>
                     <option value="nearest">Nearest</option>
                     <option value="riemersma">Riemersma</option>
                     <option value="floyd-steinberg">Floyd-Steinberg</option>
@@ -116,7 +119,7 @@
             </div>
             <div class="widget anyFormat">
                 <p>Palette quantization</p>
-                <select bind:value={data.options.compress.paletteDithering}>
+                <select bind:value={data.options.compress.paletteDithering} disabled={pngDisabled}>
                     <option value="neuquant">NeuQuant</option>
                     <option value="neuquant-float">NeuQuant (float)</option>
                     <option value="rgbquant">RGBQuant</option>

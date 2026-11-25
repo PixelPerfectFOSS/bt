@@ -1,0 +1,16 @@
+{
+    "name": "dpngquant",
+    "description": "High-quality PNG quantizer",
+    "authors": [
+        "Timur Gafarov"
+    ],
+    "copyright": "Copyright © 2022-2026, Timur Gafarov",
+    "license": "BSL-1.0",
+    "dependencies": {
+        "bindbc-freeimage": "~>1.0.1",
+        "dlib": "~>1.8.3"
+    },
+    "versions": [
+        "FI_318"
+    ]
+}
