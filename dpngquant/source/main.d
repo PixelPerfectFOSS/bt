@@ -1,6 +1,7 @@
 module main;
 
 import std.stdio;
+import std.conv;
 
 import dlib;
 import bindbc.freeimage;
@@ -105,7 +106,7 @@ void main(string[] args)
 {
     if (args.length < 2)
     {
-        writeln("Usage: dpngquant <input.png> [output.png]");
+        writeln("Usage: dpngquant <input.png> [output.png] [numcolors]");
         return;
     }
 
@@ -113,6 +114,11 @@ void main(string[] args)
     string outputFilename = args.length >= 3
         ? args[2]
         : "output.png";
+    uint numColors = args.length >= 4
+        ? args[3].to!uint
+        : 230;
+    if (numColors > 256)
+        numColors = 256;
 
     FISupport support = loadFreeImage();
     if (support != FISupport.fi318)
@@ -136,8 +142,6 @@ void main(string[] args)
         writeln("Invalid image dimensions");
         return;
     }
-
-    enum uint NumColors = 230;
 
     size_t pixelCount = cast(size_t)width * height;
     if (pixelCount > size_t.max / 4)
@@ -164,7 +168,7 @@ void main(string[] args)
     }
 
     WuQuant wu;
-    auto colors = wu.quantize(rgba, NumColors);
+    auto colors = wu.quantize(rgba, numColors);
 
     if (colors.length == 0)
     {

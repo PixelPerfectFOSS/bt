@@ -67,10 +67,10 @@
         {#if !data.options.compress.lossless && !(inputFormat === "svg" && data.options.outputFormat === "svg")}
             <div class="widget anyFormat">
                 <p>{qualityText}</p>
-                <input type="range" min="1" max="100" step="1" bind:value={data.quality} disabled={pngDisabled}>
+                <input type="range" min="1" max="100" step="1" bind:value={data.quality}>
             </div>
             <div class="widget anyFormat" style="padding-top: 14px">
-                <input type="number" min="1" max="100" step="1" bind:value={data.quality} disabled={pngDisabled}>
+                <input type="number" min="1" max="100" step="1" bind:value={data.quality}>
             </div>
         {/if}
 

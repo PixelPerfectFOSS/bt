@@ -63,7 +63,7 @@ async function compress(inputStream, options) {
 			
 			const tempOutFilename = path.join(tempFolderPath, nanoid() + ".png");
 			const dpngquantPath = path.join(__dirname, "..", "..", "..", "bin", "dpngquant.exe");
-			await execFile(dpngquantPath, [tempInFilename, tempOutFilename]);
+			await execFile(dpngquantPath, [tempInFilename, tempOutFilename, colors.toString()]);
 			outStream = fs.createReadStream(tempOutFilename);
 		}
 	}
